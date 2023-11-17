@@ -4,19 +4,19 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
-	"periph.io/x/periph/conn/gpio"
-	"periph.io/x/periph/conn/gpio/gpioreg"
-	"periph.io/x/periph/host"
+	"github.com/stianeikeland/go-rpio/v4"
 )
 
 func main() {
-	// Inicializa periph.io
-	if _, err := host.Init(); err != nil {
+	// Inicializa go-rpio
+	if err := rpio.Open(); err != nil {
 		fmt.Println(err)
 		return
 	}
+	defer rpio.Close()
 
 	reader := bufio.NewReader(os.Stdin)
 	for {
@@ -30,20 +30,22 @@ func main() {
 			continue
 		}
 
-		gpioPin := parts[0]
-		command := parts[1]
-
-		pin := gpioreg.ByName(gpioPin)
-		if pin == nil {
-			fmt.Printf("GPIO %s não encontrada.\n", gpioPin)
+		gpioNum, err := strconv.Atoi(parts[0][4:])
+		if err != nil {
+			fmt.Println("Número de GPIO inválido")
 			continue
 		}
 
+		command := parts[1]
+		pin := rpio.Pin(gpioNum)
+
 		switch command {
 		case "UP":
-			pin.Out(gpio.High)
+			pin.Output()
+			pin.High()
 		case "DOWN":
-			pin.Out(gpio.Low)
+			pin.Output()
+			pin.Low()
 		default:
 			fmt.Println("Comando inválido. Use: UP ou DOWN")
 		}
