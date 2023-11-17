@@ -40,10 +40,10 @@ func main() {
 		pin := rpio.Pin(gpioNum)
 
 		switch command {
-		case "UP":
+		case "DOWN":
 			pin.Output()
 			pin.High()
-		case "DOWN":
+		case "UP":
 			pin.Output()
 			pin.Low()
 		default:
