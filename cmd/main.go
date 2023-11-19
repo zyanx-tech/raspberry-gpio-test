@@ -26,17 +26,19 @@ func main() {
 		parts := strings.Fields(text)
 
 		if len(parts) < 2 {
-			fmt.Println("Formato inválido. Use: IO <num1,num2,...> UP/DOWN")
+			fmt.Println("Formato inválido. Use: IO<num1,num2,...> UP/DOWN")
 			continue
 		}
 
-		// Verifica se o comando começa com "IO"
+		// Certifique-se de que a parte do número começa com 'IO'
 		if !strings.HasPrefix(parts[0], "IO") {
-			fmt.Println("Formato inválido. Use: IO <num1,num2,...> UP/DOWN")
+			fmt.Println("Comando deve começar com 'IO'")
 			continue
 		}
 
-		gpioNumsStr := strings.Split(parts[0][2:], ",")
+		// Removendo o prefixo 'IO' e dividindo os números
+		numsPart := strings.TrimPrefix(parts[0], "IO")
+		gpioNumsStr := strings.Split(numsPart, ",")
 		command := parts[1]
 
 		for _, numStr := range gpioNumsStr {
