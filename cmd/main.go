@@ -20,45 +20,57 @@ func main() {
 
 	reader := bufio.NewReader(os.Stdin)
 	for {
-		fmt.Print("Digite o comando (ex: IO 5,6,7,8,12 UP): ")
+		fmt.Print("Digite o comando (ex: -io 5 6 7 12 77 2 -up): ")
 		text, _ := reader.ReadString('\n')
 		text = strings.TrimSpace(text)
 		parts := strings.Fields(text)
 
-		if len(parts) < 2 {
-			fmt.Println("Formato inválido. Use: IO<num1,num2,...> UP/DOWN")
+		if len(parts) < 3 {
+			fmt.Println("Formato inválido. Use: -io <num1> <num2> ... -up/-down")
 			continue
 		}
 
-		// Certifique-se de que a parte do número começa com 'IO'
-		if !strings.HasPrefix(parts[0], "IO") {
-			fmt.Println("Comando deve começar com 'IO'")
+		// Certifique-se de que a entrada começa com '-io'
+		if parts[0] != "-io" {
+			fmt.Println("Comando deve começar com '-io'")
 			continue
 		}
 
-		// Removendo o prefixo 'IO' e dividindo os números
-		numsPart := strings.TrimPrefix(parts[0], "IO")
-		gpioNumsStr := strings.Split(numsPart, ",")
-		command := parts[1]
+		// Encontra a posição do comando -up ou -down
+		cmdPos := -1
+		for i, part := range parts {
+			if part == "-up" || part == "-down" {
+				cmdPos = i
+				break
+			}
+		}
+
+		if cmdPos == -1 {
+			fmt.Println("Comando -up ou -down não encontrado")
+			continue
+		}
+
+		// Lê os números de GPIO
+		gpioNumsStr := parts[1:cmdPos]
+		command := parts[cmdPos]
 
 		for _, numStr := range gpioNumsStr {
-			cleanedNumStr := strings.TrimSpace(numStr) // Limpa espaços antes e depois do número
-			gpioNum, err := strconv.Atoi(cleanedNumStr)
+			gpioNum, err := strconv.Atoi(numStr)
 			if err != nil {
-				fmt.Printf("Número de GPIO inválido: '%s'\n", cleanedNumStr)
+				fmt.Printf("Número de GPIO inválido: '%s'\n", numStr)
 				continue
 			}
 
 			pin := rpio.Pin(gpioNum)
 			switch command {
-			case "DOWN":
+			case "-down":
 				pin.Output()
 				pin.High()
-			case "UP":
+			case "-up":
 				pin.Output()
 				pin.Low()
 			default:
-				fmt.Println("Comando inválido. Use: UP ou DOWN")
+				fmt.Println("Comando inválido. Use: -up ou -down")
 				break
 			}
 		}
