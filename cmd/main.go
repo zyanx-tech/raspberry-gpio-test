@@ -12,11 +12,10 @@ import (
 
 func processCommand(parts []string) {
 	if len(parts) < 3 {
-		fmt.Println("Formato inválido. Use: -io <num1> <num2> ... -up/-down")
+		fmt.Println("Invalid format. Use: -io <num1> <num2> ... -up/-down")
 		return
 	}
 
-	// Encontra a posição do comando -up ou -down
 	cmdPos := -1
 	for i, part := range parts {
 		if part == "-up" || part == "-down" {
@@ -26,18 +25,17 @@ func processCommand(parts []string) {
 	}
 
 	if cmdPos == -1 {
-		fmt.Println("Comando -up ou -down não encontrado")
+		fmt.Println("-up or -down command not found")
 		return
 	}
 
-	// Lê os números de GPIO
 	gpioNumsStr := parts[1:cmdPos]
 	command := parts[cmdPos]
 
 	for _, numStr := range gpioNumsStr {
 		gpioNum, err := strconv.Atoi(numStr)
 		if err != nil {
-			fmt.Printf("Número de GPIO inválido: '%s'\n", numStr)
+			fmt.Printf("Invalid GPIO number: '%s'\n", numStr)
 			continue
 		}
 
@@ -50,21 +48,20 @@ func processCommand(parts []string) {
 			pin.Output()
 			pin.Low()
 		default:
-			fmt.Println("Comando inválido. Use: -up ou -down")
+			fmt.Println("Invalid command. Use: -up or -down")
 			return
 		}
 	}
 }
 
 func showHelp() {
-	fmt.Println("Uso do Programa:")
-	fmt.Println("./main -io <num1> <num2> ... -up/-down : Executa o comando e sai do programa")
-	fmt.Println("./main -i                              : Entra no modo interativo")
-	fmt.Println("./main -h                              : Mostra esta mensagem de ajuda")
+	fmt.Println("Use of the Program:")
+	fmt.Println("./main -io <num1> <num2> ... -up/-down : Execute the command and exit the program")
+	fmt.Println("./main -i                              : Enter interactive mode")
+	fmt.Println("./main -h                              : Show this help message")
 }
 
 func main() {
-	// Inicializa go-rpio
 	if err := rpio.Open(); err != nil {
 		fmt.Println(err)
 		return
@@ -76,8 +73,6 @@ func main() {
 	if len(args) > 0 {
 		switch args[0] {
 		case "-i":
-			// Modo interativo
-			// Modo interativo
 			reader := bufio.NewReader(os.Stdin)
 			for {
 				fmt.Print("Digite o comando (ex: -io 5 6 7 12 77 2 -up): ")
@@ -88,15 +83,13 @@ func main() {
 				processCommand(parts)
 			}
 		case "-h":
-			// Mostra a ajuda
 			showHelp()
 			return
 		default:
-			// Executa o comando dos argumentos
 			processCommand(args)
-			return // Sai do programa após executar o comando
+			return
 		}
 	} else {
-		fmt.Println("Nenhum argumento fornecido. Exit.")
+		fmt.Println("No arguments provided. Exit.")
 	}
 }
