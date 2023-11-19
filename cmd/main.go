@@ -97,7 +97,6 @@ func main() {
 			return // Sai do programa após executar o comando
 		}
 	} else {
-		fmt.Println("Nenhum argumento fornecido. Entrando no modo interativo.")
-		main() // Chama main novamente para entrar no modo interativo
+		fmt.Println("Nenhum argumento fornecido. Exit.")
 	}
 }
