@@ -23,18 +23,26 @@ func main() {
 		fmt.Print("Digite o comando (ex: IO 5,6,7,8,12 UP): ")
 		text, _ := reader.ReadString('\n')
 		text = strings.TrimSpace(text)
-		parts := strings.Split(text, " ")
+		parts := strings.Fields(text)
 
-		if len(parts) != 2 {
+		if len(parts) < 2 {
 			fmt.Println("Formato inválido. Use: IO <num1,num2,...> UP/DOWN")
 			continue
 		}
 
+		// Verifica se o comando começa com "IO"
+		if !strings.HasPrefix(parts[0], "IO") {
+			fmt.Println("Formato inválido. Use: IO <num1,num2,...> UP/DOWN")
+			continue
+		}
+
+		// Separa os números de GPIO
 		gpioNumsStr := strings.Split(parts[0][2:], ",")
 		command := parts[1]
 
+		// Processa cada GPIO
 		for _, numStr := range gpioNumsStr {
-			gpioNum, err := strconv.Atoi(numStr)
+			gpioNum, err := strconv.Atoi(strings.TrimSpace(numStr))
 			if err != nil {
 				fmt.Printf("Número de GPIO inválido: %s\n", numStr)
 				continue
