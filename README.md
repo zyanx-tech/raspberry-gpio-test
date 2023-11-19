@@ -1,2 +1,9 @@
 # raspberry-shipped-gpio-test
-Teste de GPIO
+GPIO Test
+
+## Sintax
+
+```
+cd releases/latest/
+./main -io 5 6 -down
+```
