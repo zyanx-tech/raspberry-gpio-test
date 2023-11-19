@@ -20,34 +20,38 @@ func main() {
 
 	reader := bufio.NewReader(os.Stdin)
 	for {
-		fmt.Print("Digite o comando (ex: IO5 UP): ")
+		fmt.Print("Digite o comando (ex: IO 5,6,7,8,12 UP): ")
 		text, _ := reader.ReadString('\n')
 		text = strings.TrimSpace(text)
 		parts := strings.Split(text, " ")
 
 		if len(parts) != 2 {
-			fmt.Println("Formato inválido. Use: gpio<num> UP/DOWN")
+			fmt.Println("Formato inválido. Use: IO <num1,num2,...> UP/DOWN")
 			continue
 		}
 
-		gpioNum, err := strconv.Atoi(parts[0][4:])
-		if err != nil {
-			fmt.Println("Número de GPIO inválido")
-			continue
-		}
-
+		gpioNumsStr := strings.Split(parts[0][2:], ",")
 		command := parts[1]
-		pin := rpio.Pin(gpioNum)
 
-		switch command {
-		case "DOWN":
-			pin.Output()
-			pin.High()
-		case "UP":
-			pin.Output()
-			pin.Low()
-		default:
-			fmt.Println("Comando inválido. Use: UP ou DOWN")
+		for _, numStr := range gpioNumsStr {
+			gpioNum, err := strconv.Atoi(numStr)
+			if err != nil {
+				fmt.Printf("Número de GPIO inválido: %s\n", numStr)
+				continue
+			}
+
+			pin := rpio.Pin(gpioNum)
+			switch command {
+			case "DOWN":
+				pin.Output()
+				pin.High()
+			case "UP":
+				pin.Output()
+				pin.Low()
+			default:
+				fmt.Println("Comando inválido. Use: UP ou DOWN")
+				break
+			}
 		}
 	}
 }
