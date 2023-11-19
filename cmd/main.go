@@ -20,7 +20,7 @@ func main() {
 
 	reader := bufio.NewReader(os.Stdin)
 	for {
-		fmt.Print("Digite o comando (ex: gpio5 UP): ")
+		fmt.Print("Digite o comando (ex: IO5 UP): ")
 		text, _ := reader.ReadString('\n')
 		text = strings.TrimSpace(text)
 		parts := strings.Split(text, " ")
