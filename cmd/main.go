@@ -36,11 +36,9 @@ func main() {
 			continue
 		}
 
-		// Separa os números de GPIO
 		gpioNumsStr := strings.Split(parts[0][2:], ",")
 		command := parts[1]
 
-		// Processa cada GPIO
 		for _, numStr := range gpioNumsStr {
 			gpioNum, err := strconv.Atoi(strings.TrimSpace(numStr))
 			if err != nil {
