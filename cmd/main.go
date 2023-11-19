@@ -42,9 +42,10 @@ func main() {
 		command := parts[1]
 
 		for _, numStr := range gpioNumsStr {
-			gpioNum, err := strconv.Atoi(strings.TrimSpace(numStr))
+			cleanedNumStr := strings.TrimSpace(numStr) // Limpa espaços antes e depois do número
+			gpioNum, err := strconv.Atoi(cleanedNumStr)
 			if err != nil {
-				fmt.Printf("Número de GPIO inválido: %s\n", numStr)
+				fmt.Printf("Número de GPIO inválido: '%s'\n", cleanedNumStr)
 				continue
 			}
 
